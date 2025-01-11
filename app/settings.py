@@ -36,6 +36,8 @@ def init_settings():
             from .llmhub import init_llmhub
 
             init_llmhub()
+        case "qwen":
+            init_qwen()
         case _:
             raise ValueError(f"Invalid model provider: {model_provider}")
 
@@ -248,3 +250,27 @@ def init_mistral():
 
     Settings.llm = MistralAI(model=os.getenv("MODEL"))
     Settings.embed_model = MistralAIEmbedding(model_name=os.getenv("EMBEDDING_MODEL"))
+
+
+def init_qwen():
+    try:
+        from llama_index.llms.openai_like import OpenAILike
+        from llama_index.embeddings.dashscope import DashScopeEmbedding
+    except ImportError:
+        raise ImportError(
+            "OpenAI like support is not installed."
+        )
+
+    # 从环境变量或配置文件获取API密钥
+    DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY", "")
+    
+    Settings.llm = OpenAILike(
+        model="qwen-plus",
+        api_base="https://dashscope.aliyuncs.com/compatible-mode/v1",
+        api_key=DASHSCOPE_API_KEY,
+        is_chat_model=True
+    )
+    Settings.embed_model = DashScopeEmbedding(
+        model_name="text-embedding-v2",
+        api_key=DASHSCOPE_API_KEY
+    )

@@ -21,6 +21,8 @@ aiostream = "^0.5.2"
 cachetools = "^5.3.3"
 llama-index = "^0.12.1"
 rich = "^13.9.4"
+llama-index-llms-openai-like = "^0.3.3"
+llama-index-embeddings-dashscope = "^0.3.0"
 
 [tool.poetry.dependencies.uvicorn]
 extras = [ "standard" ]
