@@ -4,9 +4,16 @@ import { ChatInput, Message, useChatUI, useFile } from "@llamaindex/chat-ui";
 import { DocumentInfo } from "@llamaindex/chat-ui/widgets";
 import { useClientConfig } from "./hooks/use-config";
 import { useState } from "react";
+import { UseChatHelpers } from "ai/react";
 
-export default function ResumeUpload() {
-  const { requestData, setMessages } = useChatUI();
+interface ResumeUploadProps {
+  handler: UseChatHelpers & {
+    addToolResult: ({ toolCallId, result }: { toolCallId: string; result: any }) => void;
+  };
+}
+
+export default function ResumeUpload({ handler }: ResumeUploadProps) {
+  const { requestData, append } = useChatUI();
   const { backend } = useClientConfig();
   const { uploadFile, files, removeDoc } = useFile({ 
     uploadAPI: `${backend}/api/chat/upload-resume` 
@@ -73,18 +80,16 @@ export default function ResumeUpload() {
 
       const result = await response.json();
       
-      // 添加用户消息和AI回复到聊天界面
-      setMessages((messages: Message[]) => [
-        ...messages,
-        {
-          role: 'user',
-          content: `请分析我申请${company}的${position}职位的简历`,
-        },
-        {
-          role: 'assistant',
-          content: result.result.content,
-        }
-      ]);
+      // 使用append添加消息
+      await append({
+        role: 'user',
+        content: `请分析我申请${company}的${position}职位的简历`,
+      });
+      
+      await append({
+        role: 'assistant',
+        content: result.result.content,
+      });
       
       setCompany("");
       setPosition("");
