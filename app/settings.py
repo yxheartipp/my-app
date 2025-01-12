@@ -260,17 +260,14 @@ def init_qwen():
         raise ImportError(
             "OpenAI like support is not installed."
         )
-
-    # 从环境变量或配置文件获取API密钥
-    DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY", "")
-    
+  
     Settings.llm = OpenAILike(
         model="qwen-plus",
         api_base="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key=DASHSCOPE_API_KEY,
+        api_key=os.environ["DASHSCOPE_API_KEY"],
         is_chat_model=True
     )
     Settings.embed_model = DashScopeEmbedding(
         model_name="text-embedding-v2",
-        api_key=DASHSCOPE_API_KEY
+        api_key=os.environ["DASHSCOPE_API_KEY"]
     )

@@ -7,6 +7,7 @@ import { useChat } from "ai/react";
 import CustomChatInput from "./ui/chat/chat-input";
 import CustomChatMessages from "./ui/chat/chat-messages";
 import { useClientConfig } from "./ui/chat/hooks/use-config";
+import ResumeUpload from "./ui/chat/resume-upload";
 
 export default function ChatSection() {
   const { backend } = useClientConfig();
@@ -26,7 +27,7 @@ export default function ChatSection() {
   return (
     <ChatSectionUI handler={handler} className="w-full h-full">
       <CustomChatMessages />
-      <CustomChatInput />
+      <ResumeUpload handler={handler} />
     </ChatSectionUI>
   );
 }
